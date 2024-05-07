@@ -21,6 +21,13 @@ export const validatorRules = {
     const regex = /^[0-9]*$/;
     return regex.test(value) ? undefined : 'Trường này phải là số';
   },
+  text: function (value) {
+    const regex = /^[A-Z ]+$/i;
+    return regex.test(value) ? undefined : 'Trường này phải là chữ';
+  },
+  chars: function (value) {
+    return value.trim().length >= 1 ? undefined : 'Kí tự nhập vào không hợp lệ';
+  },
   confirmed: function (elementReference) {
     return function (value) {
       return value === document.querySelector(elementReference).value ? undefined : 'Giá trị nhập vào không khớp';

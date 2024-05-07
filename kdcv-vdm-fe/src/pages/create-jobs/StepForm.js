@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import { Box, Stepper, Step, StepLabel, Typography } from '@mui/material';
 import FirstStep from './FirstStep';
 import SecondStep from './SecondStep';
-import Confirm from './Confirm';
-import Success from './Success';
-import { AppContext } from '../Context';
+// import Confirm from './Confirm';
+// import Success from './Success';
+import { CreateJobContext } from 'contexts/CreateJobContext';
 
 // Step titles
 const labels = ['First Step', 'Second Step', 'Confirmation'];
@@ -15,27 +15,27 @@ const handleSteps = (step) => {
     case 1:
       return <SecondStep />;
     case 2:
-      return <Confirm />;
+      return <SecondStep />;
     default:
       throw new Error('Unknown step');
   }
 };
 
 export default function StepForm() {
-  const { activeStep } = useContext(AppContext);
+  const { activeStep } = useContext(CreateJobContext);
 
   return (
     <>
       {activeStep === labels.length ? (
-        <Success />
+        <FirstStep />
       ) : (
         <>
           <Box sx={{ my: 5 }}>
             <Typography variant="h4" align="center">
-              Multi Step Form
+              Create new job
             </Typography>
             <Typography variant="subtitle2" align="center" sx={{ mt: 2 }}>
-              React Material UI multi step form with basic form validation logic.
+              Hãy làm theo từng bước để thêm một công việc mới
             </Typography>
           </Box>
           <Stepper activeStep={activeStep} sx={{ py: 3 }} alternativeLabel>

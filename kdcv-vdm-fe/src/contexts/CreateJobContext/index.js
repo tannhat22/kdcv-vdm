@@ -1,15 +1,14 @@
 import PropTypes from 'prop-types';
 import React, { createContext, useCallback, useMemo, useReducer } from 'react';
 import { initialValues } from './initialValues';
+import { validatorRules } from 'utils/validatorRules';
 
 export const CreateJobContext = createContext({
   activeStep: 0,
   formValues: initialValues,
   handleChange() {},
   handleNext() {},
-  handleBack() {},
-  variant,
-  margin
+  handleBack() {}
 });
 
 function reducer(state, action) {
@@ -78,38 +77,33 @@ function CreateJobProvider({ children }) {
 
     let error = '';
 
-    if (required && !fieldValue) error = 'This field is required';
-    if (minLength && value && value.length < minLength) error = `Minimum ${minLength} characters is required.`;
-    if (maxLength && value && value.length > maxLength) error = 'Maximum length exceeded!';
+    if (required && !!validatorRules.required(fieldValue)) error = validatorRules.required(fieldValue);
+    if (minLength && value && validatorRules.min(minLength)(value)) error = validatorRules.min(minLength)(value);
+    if (maxLength && value && validatorRules.max(maxLength)(value)) error = validatorRules.max(maxLength)(value);
     if (validate) {
       switch (validate) {
+        case 'chars':
+          if (value && validatorRules.chars(value)) error = helperText || validatorRules.chars(value);
+          break;
         case 'text':
-          if (value && !isText.test(value)) error = helperText || 'This field accepts text only.';
+          if (value && validatorRules.text(value)) error = helperText || validatorRules.text(value);
           break;
 
         case 'number':
-          if (value && !isNumber.test(value)) error = helperText || 'This field accepts numbers only.';
+          if (value && validatorRules.number(value)) error = helperText || validatorRules.number(value);
           break;
 
         case 'email':
-          if (value && !isEmail.test(value)) error = helperText || 'Please enter a valid email address.';
+          if (value && validatorRules.email(value)) error = helperText || validatorRules.email(value);
           break;
 
-        case 'phone':
-          if (value && !isPhone.test(value)) error = helperText || 'Please enter a valid phone number. i.e: xxx-xxx-xxxx';
-          break;
+        // case 'checkbox':
+        //   if (!checked) error = helperText || 'Please provide a valid value.';
+        //   break;
 
-        case 'zip':
-          if (value && !isZip.test(value)) error = helperText || 'Please enter a valid zip code.';
-          break;
-
-        case 'checkbox':
-          if (!checked) error = helperText || 'Please provide a valid value.';
-          break;
-
-        case 'select':
-          if (!value) error = helperText || 'Please select a value.';
-          break;
+        // case 'select':
+        //   if (!value) error = helperText || 'Please select a value.';
+        //   break;
 
         default:
           break;
@@ -125,9 +119,7 @@ function CreateJobProvider({ children }) {
       formValues,
       handleChange,
       handleNext,
-      handleBack,
-      variant,
-      margin
+      handleBack
     }),
     [activeStep, formValues, handleChange, handleNext, handleBack]
   );
