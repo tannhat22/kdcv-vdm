@@ -11,7 +11,7 @@ const labels = ['First Step', 'Second Step', 'Confirmation'];
 const handleSteps = (step) => {
   switch (step) {
     case 0:
-      return <FirstStep />;
+      return <SecondStep />;
     case 1:
       return <SecondStep />;
     case 2:
@@ -32,10 +32,10 @@ export default function StepForm() {
         <>
           <Box sx={{ my: 5 }}>
             <Typography variant="h4" align="center">
-              Create new job
+              Tạo biểu khởi đầu công việc
             </Typography>
             <Typography variant="subtitle2" align="center" sx={{ mt: 2 }}>
-              Hãy làm theo từng bước để thêm một công việc mới
+              Hãy làm theo từng bước sau đây để thêm một biểu khởi đầu công việc mới
             </Typography>
           </Box>
           <Stepper activeStep={activeStep} sx={{ py: 3 }} alternativeLabel>

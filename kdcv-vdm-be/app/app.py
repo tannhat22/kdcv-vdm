@@ -47,9 +47,9 @@ app.include_router(
     routes.jobCategory_router, prefix="/jobCategory"
 )
 
-app.include_router(
-    routes.checkpointMethod_router, prefix="/checkpointMethod"
-)
+# app.include_router(
+#     routes.checkpointMethod_router, prefix="/checkpointMethod"
+# )
 
 app.include_router(
     routes.record_router, prefix="/record"

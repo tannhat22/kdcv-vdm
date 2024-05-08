@@ -26,6 +26,9 @@ class JobCategory(Base):
     job_id = Column(String(255), ForeignKey('jobs.job_id'))
     step = Column(Integer)
     checkpoint_category = Column(String(255))
+    checkpoint_method = Column(String(255))
+    checkpoint_position = Column(String(255))
+    confirmation_explanation = Column(String(255))
     device_change = Column(Boolean)
     part_code_change = Column(Boolean)
     power_outage = Column(Boolean)
@@ -36,19 +39,19 @@ class JobCategory(Base):
     C_sub = Column(Boolean)
 
     job = relationship('Job', back_populates='jobCategories')
-    checkpoint_method = relationship('CheckpointMethod', back_populates='job_category')
+    # checkpoint_method = relationship('CheckpointMethod', back_populates='job_category')
 
 
-class CheckpointMethod(Base):
-    __tablename__ = "checkpoint_methods"
+# class CheckpointMethod(Base):
+#     __tablename__ = "checkpoint_methods"
 
-    id = Column(Integer, primary_key=True, index=True)
-    desc = Column(String(255))
-    position = Column(String(255))
-    confirmation_explanation = Column(String(255))
-    job_category_id = Column(Integer, ForeignKey('job_categories.id'))
+#     id = Column(Integer, primary_key=True, index=True)
+#     desc = Column(String(255))
+#     position = Column(String(255))
+#     confirmation_explanation = Column(String(255))
+#     job_category_id = Column(Integer, ForeignKey('job_categories.id'))
 
-    job_category = relationship('JobCategory', back_populates='checkpoint_method')
+#     job_category = relationship('JobCategory', back_populates='checkpoint_method')
 
 
 class Machine(Base):

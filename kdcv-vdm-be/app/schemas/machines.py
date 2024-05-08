@@ -28,6 +28,15 @@ class JobCategoryBase(BaseModel):
     checkpoint_category: str = Field (
         description="Hạng mục điểm kiểm"
     )
+    checkpoint_method: str = Field (
+        description="Phương pháp điểm kiểm"
+    ) 
+    checkpoint_position: str = Field (
+        description="Vị trí điểm kiểm"
+    )
+    confirmation_explanation: str = Field (
+        description="Phương pháp xác nhận & bản Thuyết minh kỹ thuật"
+    )
     device_change: bool = Field (
         description="Thay đổi thiết bị"
     )
@@ -56,28 +65,28 @@ class JobCategoryBase(BaseModel):
     class Config:
         from_attributes = True
 
-class CheckpointMethodBase(BaseModel):
-    desc: str = Field(
-        description="Mô tả phương pháp điểm kiểm"
-    )
-    position: str = Field(
-        description="Vị trí điểm kiểm"
-    )
-    confirmation_explanation: str = Field(
-        description="Phương pháp xác nhận & bản Thuyết minh kỹ thuật"
-    )
-    is_measure: bool = Field(
-        description="Phương pháp này có đo hay không"
-    )
-    is_auto: bool = Field(
-        description="Phương pháp này có lấy dữ liệu từ máy hay không"
-    )
-    job_category_id: int = Field(
-        description="Mã ID của hạng mục điểm kiểm"
-    )
+# class CheckpointMethodBase(BaseModel):
+#     desc: str = Field(
+#         description="Mô tả phương pháp điểm kiểm"
+#     )
+#     position: str = Field(
+#         description="Vị trí điểm kiểm"
+#     )
+#     confirmation_explanation: str = Field(
+#         description="Phương pháp xác nhận & bản Thuyết minh kỹ thuật"
+#     )
+#     is_measure: bool = Field(
+#         description="Phương pháp này có đo hay không"
+#     )
+#     is_auto: bool = Field(
+#         description="Phương pháp này có lấy dữ liệu từ máy hay không"
+#     )
+#     job_category_id: int = Field(
+#         description="Mã ID của hạng mục điểm kiểm"
+#     )
 
-    class Config:
-        from_attributes = True
+#     class Config:
+#         from_attributes = True
 
 class MachineBase(BaseModel):
     serial_no: str = Field (
@@ -108,20 +117,20 @@ class Job(JobBase):
 
 class JobCategory(JobCategoryBase):
     job: Job
-    checkpoint_method: list[CheckpointMethodBase]
+    # checkpoint_method: list[CheckpointMethodBase]
 
 class JobCategoryId(JobCategoryBase):
     id: int | None = Field(
         default = None
     )
 
-class CheckpointMethod(CheckpointMethodBase):
-    job_category: JobCategory
+# class CheckpointMethod(CheckpointMethodBase):
+#     job_category: JobCategory
 
-class CheckpointMethodId(CheckpointMethodBase):
-    id: int | None = Field(
-        default = None
-    )
+# class CheckpointMethodId(CheckpointMethodBase):
+#     id: int | None = Field(
+#         default = None
+#     )
 
 class Machine(MachineBase):
     job: Job

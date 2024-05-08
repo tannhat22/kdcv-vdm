@@ -42,7 +42,7 @@ const CreateJobs = () => {
   const { translate } = useLocales();
   return (
     <CreateJobProvider>
-      <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
+      <Container component="main" maxWidth="xl" sx={{ mb: 4 }}>
         <Paper variant="outlined" sx={{ p: '24px' }}>
           <StepForm />
         </Paper>

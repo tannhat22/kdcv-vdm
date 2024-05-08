@@ -1,21 +1,5 @@
 import PropTypes from 'prop-types';
-import {
-  Box,
-  Button,
-  IconButton,
-  Grid,
-  Paper,
-  FormControl,
-  Select,
-  TextField,
-  Tooltip,
-  InputAdornment,
-  InputLabel,
-  Modal,
-  MenuItem,
-  Typography,
-  LinearProgress
-} from '@mui/material';
+import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
@@ -23,8 +7,6 @@ import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons
 import { useState, useContext, useCallback } from 'react';
 
 import { useLocales } from 'locales';
-import axios from 'utils/axios';
-import { validatorRules } from 'utils/validatorRules';
 import { CreateJobContext } from 'contexts/CreateJobContext';
 
 const style = {
@@ -38,7 +20,7 @@ const style = {
 
 // ==============================|| CREATE-JOBS ||============================== //
 
-const CreateJobs = () => {
+const FirstStep = () => {
   const { formValues, handleChange, handleBack, handleNext } = useContext(CreateJobContext);
   const { jobId, jobName, draftedPlace, drafter } = formValues;
   const { translate } = useLocales();
@@ -157,6 +139,8 @@ const CreateJobs = () => {
             type="text"
             fullWidth
             placeholder={translate('Ex: Kiểm tra ngoại quan vỏ nhỏ')}
+            multiline
+            maxRows={5}
             variant="outlined"
             required={jobName.required}
             error={!!jobName.error}
@@ -188,4 +172,4 @@ const CreateJobs = () => {
   );
 };
 
-export default CreateJobs;
+export default FirstStep;
