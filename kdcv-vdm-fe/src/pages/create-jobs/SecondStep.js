@@ -12,6 +12,7 @@ import {
   Tooltip
 } from '@mui/material';
 
+import { AddPhotoAlternateIcon } from '@mui/icons-material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronLeft, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
@@ -37,7 +38,8 @@ const SecondStep = () => {
     formValues;
   const { translate } = useLocales();
   const [steps, setSteps] = useState(1);
-  const items = Array.from({ length: steps }, (_, index) => index);
+  const [images, setImages] = useState([]);
+  const categories = Array.from({ length: steps }, (_, index) => index);
 
   // Check if all values are not empty and if there are some errors
   // const isError = useCallback(
@@ -82,10 +84,10 @@ const SecondStep = () => {
   return (
     <>
       <Grid container rowSpacing={3.5} columnSpacing={2.75}>
-        {items.map((item) => (
+        {categories.map((category) => (
           <>
             <Grid item xs={12} md={12} lg={12}>
-              <Typography variant="h4">Hạng mục {item + 1}:</Typography>
+              <Typography variant="h4">Hạng mục {category + 1}:</Typography>
             </Grid>
             <Grid item xs={12} md={12} lg={12}>
               <Typography variant="subtitle1">Hạng mục điểm kiểm:</Typography>
@@ -118,7 +120,7 @@ const SecondStep = () => {
                 // onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={12} md={8} lg={8}>
+            <Grid item xs={12} md={12} lg={12}>
               <Typography variant="subtitle1">PP xác nhận & bản TMKT:</Typography>
               <TextField
                 name="jobName"
@@ -134,9 +136,130 @@ const SecondStep = () => {
                 // onChange={handleChange}
               />
             </Grid>
+            <Grid item xs={12} md={8} lg={8}>
+              <Box>
+                <Typography variant="subtitle1">Ký lục khi phát sinh thay đổi, sự cố:</Typography>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <FormControlLabel
+                    sx={{ flex: '1' }}
+                    control={
+                      <Checkbox
+                        // checked={agreenemt.value}
+                        // onChange={handleChange}
+                        name="agreenemt"
+                        color="primary"
+                        // required={agreenemt.required}
+                      />
+                    }
+                    label="(I) Thay đổi thiết bị"
+                  />
+                  <FormControlLabel
+                    sx={{ flex: '1' }}
+                    control={
+                      <Checkbox
+                        // checked={agreenemt.value}
+                        // onChange={handleChange}
+                        name="agreenemt"
+                        color="primary"
+                        // required={agreenemt.required}
+                      />
+                    }
+                    label="(II) Thay đổi mã hàng"
+                  />
+                  <FormControlLabel
+                    sx={{ flex: '1' }}
+                    control={
+                      <Checkbox
+                        // checked={agreenemt.value}
+                        // onChange={handleChange}
+                        name="agreenemt"
+                        color="primary"
+                        // required={agreenemt.required}
+                      />
+                    }
+                    label="(III) Cúp điện, điện chập chờn"
+                  />
+                </div>
+              </Box>
+              <Box sx={{ mt: '12px' }}>
+                <Typography variant="subtitle1">Phân khu:</Typography>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <FormControlLabel
+                    sx={{ flex: '1' }}
+                    control={
+                      <Checkbox
+                        // checked={agreenemt.value}
+                        // onChange={handleChange}
+                        name="agreenemt"
+                        color="primary"
+                        // required={agreenemt.required}
+                      />
+                    }
+                    label="Phân khu A"
+                  />
+                  <FormControlLabel
+                    sx={{ flex: '1' }}
+                    control={
+                      <Checkbox
+                        // checked={agreenemt.value}
+                        // onChange={handleChange}
+                        name="agreenemt"
+                        color="primary"
+                        // required={agreenemt.required}
+                      />
+                    }
+                    label="Phân khu B"
+                  />
+                  <FormControlLabel
+                    sx={{ flex: '1' }}
+                    control={
+                      <Checkbox
+                        // checked={agreenemt.value}
+                        // onChange={handleChange}
+                        name="agreenemt"
+                        color="primary"
+                        // required={agreenemt.required}
+                      />
+                    }
+                    label="Phân khu C"
+                  />
+                </div>
+              </Box>
+              <Box sx={{ mt: '12px' }}>
+                <Typography variant="subtitle1">Thuộc tính:</Typography>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <FormControlLabel
+                    sx={{ flex: '1' }}
+                    control={
+                      <Checkbox
+                        // checked={agreenemt.value}
+                        // onChange={handleChange}
+                        name="agreenemt"
+                        color="primary"
+                        // required={agreenemt.required}
+                      />
+                    }
+                    label="Sử dụng đơn vị đo"
+                  />
+                  <FormControlLabel
+                    sx={{ flex: '1' }}
+                    control={
+                      <Checkbox
+                        // checked={agreenemt.value}
+                        // onChange={handleChange}
+                        name="agreenemt"
+                        color="primary"
+                        // required={agreenemt.required}
+                      />
+                    }
+                    label="Lấy dữ liệu tự động"
+                  />
+                </div>
+              </Box>
+            </Grid>
             <Grid item xs={12} md={4} lg={4}>
               <Typography variant="subtitle1">Vị trí điểm kiểm:</Typography>
-              <TextField
+              {/* <TextField
                 name="checkpointPosition"
                 type="text"
                 fullWidth
@@ -146,126 +269,14 @@ const SecondStep = () => {
                 // error={!!drafter.error}
                 // helperText={drafter.error}
                 // onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12} md={12} lg={12}>
-              <Typography variant="subtitle1">Ký lục khi phát sinh thay đổi, sự cố:</Typography>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <FormControlLabel
-                  sx={{ mr: 10 }}
-                  control={
-                    <Checkbox
-                      // checked={agreenemt.value}
-                      // onChange={handleChange}
-                      name="agreenemt"
-                      color="primary"
-                      // required={agreenemt.required}
-                    />
-                  }
-                  label="(I) Thay đổi thiết bị"
-                />
-                <FormControlLabel
-                  sx={{ mr: 10 }}
-                  control={
-                    <Checkbox
-                      // checked={agreenemt.value}
-                      // onChange={handleChange}
-                      name="agreenemt"
-                      color="primary"
-                      // required={agreenemt.required}
-                    />
-                  }
-                  label="(II) Thay đổi mã hàng"
-                />
-                <FormControlLabel
-                  sx={{ mr: 10 }}
-                  control={
-                    <Checkbox
-                      // checked={agreenemt.value}
-                      // onChange={handleChange}
-                      name="agreenemt"
-                      color="primary"
-                      // required={agreenemt.required}
-                    />
-                  }
-                  label="(III) Cúp điện, điện chập chờn"
-                />
-              </div>
-            </Grid>
-            <Grid item xs={12} md={12} lg={12}>
-              <Typography variant="subtitle1">Phân khu:</Typography>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <FormControlLabel
-                  sx={{ mr: 10 }}
-                  control={
-                    <Checkbox
-                      // checked={agreenemt.value}
-                      // onChange={handleChange}
-                      name="agreenemt"
-                      color="primary"
-                      // required={agreenemt.required}
-                    />
-                  }
-                  label="Phân khu A"
-                />
-                <FormControlLabel
-                  sx={{ mr: 10 }}
-                  control={
-                    <Checkbox
-                      // checked={agreenemt.value}
-                      // onChange={handleChange}
-                      name="agreenemt"
-                      color="primary"
-                      // required={agreenemt.required}
-                    />
-                  }
-                  label="Phân khu B"
-                />
-                <FormControlLabel
-                  sx={{ mr: 10 }}
-                  control={
-                    <Checkbox
-                      // checked={agreenemt.value}
-                      // onChange={handleChange}
-                      name="agreenemt"
-                      color="primary"
-                      // required={agreenemt.required}
-                    />
-                  }
-                  label="Phân khu C"
-                />
-              </div>
-            </Grid>
-            <Grid item xs={12} md={12} lg={12}>
-              <Typography variant="subtitle1">Thuộc tính:</Typography>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <FormControlLabel
-                  sx={{ mr: 10 }}
-                  control={
-                    <Checkbox
-                      // checked={agreenemt.value}
-                      // onChange={handleChange}
-                      name="agreenemt"
-                      color="primary"
-                      // required={agreenemt.required}
-                    />
-                  }
-                  label="Sử dụng đơn vị đo"
-                />
-                <FormControlLabel
-                  sx={{ mr: 10 }}
-                  control={
-                    <Checkbox
-                      // checked={agreenemt.value}
-                      // onChange={handleChange}
-                      name="agreenemt"
-                      color="primary"
-                      // required={agreenemt.required}
-                    />
-                  }
-                  label="Lấy dữ liệu tự động"
-                />
-              </div>
+              /> */}
+              <Box>
+                {images[category] ? (
+                  <img width="100%" alt="hình ảnh vị trí kiểm điểm" src={images[category]} />
+                ) : (
+                  'nhat'
+                )}
+              </Box>
             </Grid>
             <Grid item xs={12} md={12} lg={12}>
               <Divider />
