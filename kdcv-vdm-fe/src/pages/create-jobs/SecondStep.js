@@ -38,8 +38,9 @@ const SecondStep = () => {
     formValues;
   const { translate } = useLocales();
   const [steps, setSteps] = useState(1);
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState({});
   const categories = Array.from({ length: steps }, (_, index) => index);
+  console.log(images);
 
   // Check if all values are not empty and if there are some errors
   // const isError = useCallback(
@@ -70,6 +71,29 @@ const SecondStep = () => {
   //     Csub
   //   ]
   // );
+  const handleImageChange = (event) => {
+    console.log(event.target.dataset.category);
+    const selectedFiles = event.target.files;
+
+    // Duyệt qua từng file và đọc nó bằng FileReader
+    Array.from(selectedFiles).forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        // Tạo một đối tượng hình ảnh mới với URL xem trước và tệp
+        const newImage = {
+          file: file,
+          preview: e.target.result
+        };
+        // Thêm đối tượng hình ảnh vào mảng
+        setImages((prevImages) => ({
+          ...prevImages,
+          [event.target.dataset.category]: newImage
+        }));
+      };
+      // Đọc tệp hình ảnh
+      reader.readAsDataURL(file);
+    });
+  };
 
   const handleRemoveStep = (e) => {
     if (steps > 1) {
@@ -272,10 +296,11 @@ const SecondStep = () => {
               /> */}
               <Box>
                 {images[category] ? (
-                  <img width="100%" alt="hình ảnh vị trí kiểm điểm" src={images[category]} />
+                  <img width="100%" alt="hình ảnh vị trí kiểm điểm" src={images[category].preview} />
                 ) : (
                   'nhat'
                 )}
+                <input type="file" multiple data-category={category} onChange={handleImageChange} />
               </Box>
             </Grid>
             <Grid item xs={12} md={12} lg={12}>
