@@ -16,7 +16,7 @@ import { AddPhotoAlternateIcon } from '@mui/icons-material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronLeft, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
-import { useState, useContext, useCallback } from 'react';
+import { useState, useContext, useCallback, Fragment } from 'react';
 
 import { useLocales } from 'locales';
 import { CreateJobContext } from 'contexts/CreateJobContext';
@@ -73,6 +73,7 @@ const SecondStep = () => {
   // );
   const handleImageChange = (event) => {
     console.log(event.target.dataset.category);
+    console.log(event.target.dataset.category);
     const selectedFiles = event.target.files;
 
     // Duyệt qua từng file và đọc nó bằng FileReader
@@ -109,7 +110,7 @@ const SecondStep = () => {
     <>
       <Grid container rowSpacing={3.5} columnSpacing={2.75}>
         {categories.map((category) => (
-          <>
+          <Fragment key={category}>
             <Grid item xs={12} md={12} lg={12}>
               <Typography variant="h4">Hạng mục {category + 1}:</Typography>
             </Grid>
@@ -295,18 +296,32 @@ const SecondStep = () => {
                 // onChange={handleChange}
               /> */}
               <Box>
+                <input type="file" accept="image/*" data-category={category} onChange={handleImageChange} />
+
                 {images[category] ? (
-                  <img width="100%" alt="hình ảnh vị trí kiểm điểm" src={images[category].preview} />
-                ) : (
-                  'nhat'
-                )}
-                <input type="file" multiple data-category={category} onChange={handleImageChange} />
+                  <div
+                    style={{
+                      margin: '10px',
+                      border: '1px solid black',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <img
+                      width="100%"
+                      alt="hình ảnh vị trí kiểm điểm"
+                      src={images[category].preview}
+                      style={{ objectFit: 'contain', width: '100%', height: 'auto' }}
+                    />
+                  </div>
+                ) : null}
               </Box>
             </Grid>
             <Grid item xs={12} md={12} lg={12}>
               <Divider />
             </Grid>
-          </>
+          </Fragment>
         ))}
       </Grid>
 
