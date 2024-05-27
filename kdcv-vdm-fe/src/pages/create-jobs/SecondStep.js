@@ -148,7 +148,7 @@ const SecondStep = () => {
             <Grid item xs={12} md={12} lg={12}>
               <Typography variant="subtitle1">PP xác nhận & bản TMKT:</Typography>
               <TextField
-                name="jobName"
+                name="confirmMethod"
                 type="text"
                 fullWidth
                 placeholder={translate('Ex: Kiểm tra ngoại quan vỏ nhỏ')}
@@ -171,7 +171,7 @@ const SecondStep = () => {
                       <Checkbox
                         // checked={agreenemt.value}
                         // onChange={handleChange}
-                        name="agreenemt"
+                        name="deviceChange"
                         color="primary"
                         // required={agreenemt.required}
                       />
@@ -184,7 +184,7 @@ const SecondStep = () => {
                       <Checkbox
                         // checked={agreenemt.value}
                         // onChange={handleChange}
-                        name="agreenemt"
+                        name="partCodeChange"
                         color="primary"
                         // required={agreenemt.required}
                       />
@@ -197,7 +197,7 @@ const SecondStep = () => {
                       <Checkbox
                         // checked={agreenemt.value}
                         // onChange={handleChange}
-                        name="agreenemt"
+                        name="powerOutage"
                         color="primary"
                         // required={agreenemt.required}
                       />
@@ -215,7 +215,7 @@ const SecondStep = () => {
                       <Checkbox
                         // checked={agreenemt.value}
                         // onChange={handleChange}
-                        name="agreenemt"
+                        name="Asub"
                         color="primary"
                         // required={agreenemt.required}
                       />
@@ -228,7 +228,7 @@ const SecondStep = () => {
                       <Checkbox
                         // checked={agreenemt.value}
                         // onChange={handleChange}
-                        name="agreenemt"
+                        name="Bsub"
                         color="primary"
                         // required={agreenemt.required}
                       />
@@ -241,7 +241,7 @@ const SecondStep = () => {
                       <Checkbox
                         // checked={agreenemt.value}
                         // onChange={handleChange}
-                        name="agreenemt"
+                        name="Csub"
                         color="primary"
                         // required={agreenemt.required}
                       />
@@ -259,7 +259,7 @@ const SecondStep = () => {
                       <Checkbox
                         // checked={agreenemt.value}
                         // onChange={handleChange}
-                        name="agreenemt"
+                        name="isMeasure"
                         color="primary"
                         // required={agreenemt.required}
                       />
@@ -272,7 +272,7 @@ const SecondStep = () => {
                       <Checkbox
                         // checked={agreenemt.value}
                         // onChange={handleChange}
-                        name="agreenemt"
+                        name="isAuto"
                         color="primary"
                         // required={agreenemt.required}
                       />
@@ -296,7 +296,13 @@ const SecondStep = () => {
                 // onChange={handleChange}
               /> */}
               <Box>
-                <input type="file" accept="image/*" data-category={category} onChange={handleImageChange} />
+                <input
+                  type="file"
+                  name="checkpointPosition"
+                  accept="image/*"
+                  data-category={category}
+                  onChange={handleImageChange}
+                />
 
                 {images[category] ? (
                   <div
