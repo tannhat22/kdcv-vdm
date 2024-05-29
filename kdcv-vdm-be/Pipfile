@@ -8,6 +8,7 @@ fastapi = {version = "*", extras = ["all"]}
 pyjwt = {version = "*", extras = ["crypto"]}
 sqlalchemy = "*"
 pymysql = "*"
+pandas = {version = "*", extras = ["excel"]}
 
 [dev-packages]
 
