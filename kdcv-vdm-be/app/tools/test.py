@@ -1,36 +1,36 @@
 import pandas as pd
 import os
 
-file_name = "/home/tannhat/Documents/KDCV/T19Y001V00-VDM001-AE.xlsb"
+file_name = "T19Y001V00-VDM001-AE.xlsb"
 folder_path = "/home/tannhat/Documents/KDCV"
 
-# sheet = pd.read_excel(file_name, engine="pyxlsb", sheet_name="NV")
+formStruct = {
+    'operationName': [0,0],
+    'year': [1,1],
+    'speciesName': [1,3],
+    'month': [2,1],
+    'shift': [2,3],
+    'deviceName': [3,0],
+    'no': [3,1],
+    'category': [3,2],
+    'method': [3,3],
+    'position': [3,4],
+    'confirm': [3,5]
+}
 
-def find_all_xlsb_in_folder(folder_path):
-    listFile = []
-    for filename in os.listdir(folder_path):
-        # Kiểm tra xem file có phần mở rộng .xlsb hay không
-        if filename.endswith(('.xlsb','XLSB')):
-            # Tạo đường dẫn đầy đủ tới file .xlsb
-            xlsb_file = os.path.join(folder_path, filename)
-            listFile.append(xlsb_file)
-    return listFile
+full_dir_name = os.path.join(folder_path, file_name)
 
-allFileXLSB = find_all_xlsb_in_folder(folder_path)
-
-i = 1
-sheetNameNhanvien = []
-for file in allFileXLSB:
-    print("name file: ", file)
-    sheetNames = pd.ExcelFile(file, engine="pyxlsb").sheet_names
-    flag = False
-    for name in sheetNames:
-        if name.startswith('N'):
-            if not flag:
-                i += 1
-                flag = True
-            if name not in sheetNameNhanvien:
-                sheetNameNhanvien.append(name)
-            
-print("Tổng số file có sheetname bắt đầu bằng N: ", i)
-print("Tổng hợp tên sheet giành cho Nhân viên: ", sheetNameNhanvien)
+sheetNames = pd.ExcelFile(full_dir_name, engine="pyxlsb").sheet_names
+col = formStruct["no"][1]
+for name in sheetNames:
+    if name.startswith('N'):
+        sheet = pd.read_excel(full_dir_name, engine="pyxlsb", sheet_name=name, usecols="A:J", header=None)
+        print(sheet.at[formStruct["operationName"][0], formStruct["operationName"][1]])
+        notNanValue = sheet[col].dropna().index
+        for i in notNanValue:
+            if i > formStruct["no"][0]:
+                print("///////////////////////////////////////////////")
+                print(f"Hạng mục điểm kiểm {sheet.at[i,col]}: {sheet.at[i,col+1]}")
+                print(f"  Phương pháp điểm kiểm: {sheet.at[i,col+2]}")
+                # print(f"  Vị trí điểm kiểm: {sheet.at[i,col+3]}")
+                print(f"  Phương pháp xác nhận & bản TMKT: {sheet.at[i,col+5]}")
