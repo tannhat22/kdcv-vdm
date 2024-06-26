@@ -49,12 +49,13 @@ def is_excel_file(files):
 for excelFile in allFileXLSX:
     column_index = 2
     sheetNameNhanvien = []
-    workbook = openpyxl.load_workbook(os.path.join(folder_path, excelFile))
+    workbook = openpyxl.load_workbook(filename=os.path.join(folder_path, excelFile), data_only=True)
     sheetNames = workbook.sheetnames
     analyst_categories = []
     jobName = ""
+    print(f"Mã số KDCV: {excelFile[:-5]}")
     for name in sheetNames:
-        if name.startswith('N'):
+        if name.startswith('K'):
             # print(f"Sheet name: {name} -----------------/")
             sheet = workbook[name]
             jobName = sheet['A1'].value
@@ -95,30 +96,30 @@ for excelFile in allFileXLSX:
                 if isinstance(value, int):
                     # print(f"Vị trí: Hàng {row}, Cột {column_index} - Giá trị: {value}")
                     category_merged = merged_cells_filter["C"]
-                    subdivisions = []
-                    for cell in category_merged:
-                        start = int(cell.split(':')[0][1:])
-                        end = int(cell.split(':')[1][1:])
-                        if start == row:
-                            isMeasure = False
-                            for i in range(start, end + 1):
-                                subName = sheet.cell(row=i, column=8).value
-                                if (subName is not None):
-                                    sub = {"name": subName}
-                                    if (sheet.cell(row=i, column=9).value and
-                                        sheet.cell(row=i, column=10).value):
-                                        isMeasure = True
-                                        rawDvd1 = sheet.cell(row=i, column=10).value
-                                        rawDvd2 = sheet.cell(row=i+1, column=10).value
-                                        dvd1 = rawDvd1.replace("\n", "").replace(" ","")
-                                        dvd2 = rawDvd2.replace("\n", "").replace(" ","")
-                                        sub["isMeasure"] = isMeasure
-                                        sub["unitOfMeasurement"] = [dvd1, dvd2]
+                    # subdivisions = []
+                    # for cell in category_merged:
+                    #     start = int(cell.split(':')[0][1:])
+                    #     end = int(cell.split(':')[1][1:])
+                    #     if start == row:
+                    #         isMeasure = False
+                    #         for i in range(start, end + 1):
+                    #             subName = sheet.cell(row=i, column=8).value
+                    #             if (subName is not None):
+                    #                 sub = {"name": subName}
+                    #                 if (sheet.cell(row=i, column=9).value and
+                    #                     sheet.cell(row=i, column=10).value):
+                    #                     isMeasure = True
+                    #                     rawDvd1 = sheet.cell(row=i, column=10).value
+                    #                     rawDvd2 = sheet.cell(row=i+1, column=10).value
+                    #                     dvd1 = rawDvd1.replace("\n", "").replace(" ","")
+                    #                     dvd2 = rawDvd2.replace("\n", "").replace(" ","")
+                    #                     sub["isMeasure"] = isMeasure
+                    #                     sub["unitOfMeasurement"] = [dvd1, dvd2]
                                         
-                                    else:
-                                        sub["isMeasure"] = isMeasure
-                                        sub["unitOfMeasurement"] = []
-                                    subdivisions.append(sub)
+                    #                 else:
+                    #                     sub["isMeasure"] = isMeasure
+                    #                     sub["unitOfMeasurement"] = []
+                    #                 subdivisions.append(sub)
 
                     # category[0]: step
                     # category[1]: hạng mục điểm kiểm
@@ -129,10 +130,22 @@ for excelFile in allFileXLSX:
                     # category[6]: Phân khu: [{name: tên phân khu, is_measure: trị thực đo, unitOfMeasurement: đơn vị đo}]
                     # category[7]: Các thay đổi cần ghi chép lại: {deviceChange: thay đổi thiết bị, partCodeChange: thay đổi mã hàng, powerFailure: sự cố về nguồn điện}
                     category = [0,0,0,0,0,0,0,0]
+                    pattern_IVXLCDM = r"\([IVXLCDM ,.;:]+\)"
                     category[0] = value
                     category[1] = sheet.cell(row=row, column=3).value
+                    # print(f"{category[0]}: {category[1]}")
                     if category[1] is not None:
                         category[1] = category[1].replace("\n"," ")
+                        match_IVXLCDM = re.search(pattern_IVXLCDM, category[1])
+                    if match_IVXLCDM:
+                        extracted_string = match_IVXLCDM.group()
+                        normalized_string = re.sub(r"[ ,.;:]+", ',', extracted_string.strip('()'))
+                        array_of_values = normalized_string.split(',')
+
+                    # In kết quả
+                    # print(f"Chuỗi đầu vào: '{category[1]}'")
+                    # print(f"  Phần trích xuất: {array_of_values}")
+
                     category[2] = sheet.cell(row=row, column=4).value
                     if category[2] is not None:
                         category[2] = category[2].replace("\n"," ")
@@ -145,19 +158,26 @@ for excelFile in allFileXLSX:
                     category[5] = sheet.cell(row=row, column=7).value
                     if category[5] is not None:
                         category[5] = category[5].replace("\n",", ")
-                    category[6] = subdivisions
-                    category[7] = {"deviceChange": False, "partCodeChange": False, "powerFailure": False}
+                    # category[6] = subdivisions
+                    category[6] = {"deviceChange": False, "partCodeChange": False, "powerFailure": False}
+                    for i in array_of_values:
+                        if i == "I":
+                            category[6]["deviceChange"] = True
+                        elif i == "II":
+                            category[6]["partCodeChange"] = True
+                        elif i == "III":
+                            category[6]["powerFailure"] = True
+
                     analyst_categories.append(category)
 
     patternJobName = r"tên\s*thao\s*tác\s*:\s*(.*)"
     matchJobName = re.search(patternJobName, jobName, re.IGNORECASE)
-    if match:
+    if matchJobName:
         result = matchJobName.group(1)
         jobName = result
     else:
         print("Không tìm thấy 'Tên thao tác:' trong chuỗi đầu vào.")
 
-    print(f"Mã số KDCV: {excelFile[:-5]}")
     print(f"Tên thao tác: {jobName}")
     for category in analyst_categories:
         print(f"STT: {category[0]}")
@@ -166,11 +186,34 @@ for excelFile in allFileXLSX:
         print(f"  Vị trí điểm kiểm: {category[3]}") 
         print(f"  PP xác nhận & bản TMKT: {category[4]}")
         print(f"  Chủng loại: {category[5]}") 
-        print(f"  Các thay đổi cần ghi chép lại: {category[7]}")
-        print(f"  Phân khu:")
-        for sub in category[6]:
-            print(f"    Name: {sub['name']}, Trị thực đo: {sub['isMeasure']}, Đơn vị đo: {sub['unitOfMeasurement']}")
+        print(f"  Các thay đổi cần ghi chép lại: {category[6]}")
+        # print(f"  Phân khu:")
+        # for sub in category[6]:
+        #     print(f"    Name: {sub['name']}, Trị thực đo: {sub['isMeasure']}, Đơn vị đo: {sub['unitOfMeasurement']}")
+    print("/-------------------------------------------------------------/")
 
     # Đóng workbook
     workbook.close()
-    print("/-------------------------------------------------------------/")
+
+def extract_and_normalize(input_string):
+    # Biểu thức chính quy để tìm các phần có dạng (I), (II), (I;III), (I.III), v.v.
+    pattern = r"\([IVXLCDM ,.;:]+\)"
+    
+    # Tìm mẫu đầu tiên khớp với biểu thức chính quy
+    match = re.search(pattern, input_string)
+    if match:
+        extracted_string = match.group()
+        print(f"Phần trích xuất: {extracted_string}")
+        
+        # Chuẩn hóa các ký tự ngăn cách thành dấu phẩy
+        normalized_string = re.sub(r"[ ,.;:]+", ',', extracted_string.strip('()'))
+        print(f"Chuỗi chuẩn hóa: {normalized_string}")
+        
+        # Tách chuỗi thành mảng
+        array_of_values = normalized_string.split(',')
+        print(f"Mảng phân tích: {array_of_values}")
+        
+        return array_of_values
+    else:
+        print("Không tìm thấy phần khớp nào.")
+        return []
