@@ -137,6 +137,9 @@ for excelFile in allFileXLSX:
                     if category[1] is not None:
                         category[1] = category[1].replace("\n"," ")
                         match_IVXLCDM = re.search(pattern_IVXLCDM, category[1])
+                    else:
+                        continue
+                    
                     if match_IVXLCDM:
                         extracted_string = match_IVXLCDM.group()
                         normalized_string = re.sub(r"[ ,.;:]+", ',', extracted_string.strip('()'))
@@ -149,15 +152,21 @@ for excelFile in allFileXLSX:
                     category[2] = sheet.cell(row=row, column=4).value
                     if category[2] is not None:
                         category[2] = category[2].replace("\n"," ")
+                    else:
+                        continue
+
                     category[3] = sheet.cell(row=row, column=5).value
-                    if category[3] is not None:
-                        category[3] = category[3].replace("\n"," ")
+
                     category[4] = sheet.cell(row=row, column=6).value
                     if category[4] is not None:
                         category[4] = category[4].replace("\n",", ")
+                    else:
+                        continue
+
                     category[5] = sheet.cell(row=row, column=7).value
                     if category[5] is not None:
                         category[5] = category[5].replace("\n",", ")
+
                     # category[6] = subdivisions
                     category[6] = {"deviceChange": False, "partCodeChange": False, "powerFailure": False}
                     for i in array_of_values:
