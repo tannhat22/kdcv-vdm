@@ -3,48 +3,53 @@ import re
 import openpyxl
 
 # file_name = "TDB079BV00-VDM001-AD.xlsx"
-folder_path = "/home/amrserver/Documents/KDCV-m104/xlsx"
+folder_path = "/home/tannhat/Documents/M100"
 
 # sheet = pd.read_excel(folder_path+file_name, engine="pyxlsb", sheet_name="NVTT 1", usecols='A:J' , header=None)
+
 
 class StructForm:
     def __init__(self) -> None:
         self.operationName = "A1"
-        self.year = [1,1]
-        self.speciesName = [1,3]
-        self.month = [2,1]
-        self.shiftStage = [2,3]
+        self.year = [1, 1]
+        self.speciesName = [1, 3]
+        self.month = [2, 1]
+        self.shiftStage = [2, 3]
         self.deviceName = "A5"
-        self.no = [4,2]
-        self.category = [3,2]
-        self.method = [3,3]
-        self.position = [3,4]
-        self.confirm = [3,5]
-        self.type = [3,6]
+        self.no = [4, 2]
+        self.category = [3, 2]
+        self.method = [3, 3]
+        self.position = [3, 4]
+        self.confirm = [3, 5]
+        self.type = [3, 6]
+
 
 def find_all_xlsx_in_folder(folder_path):
     listFile = []
     for filename in os.listdir(folder_path):
         # Kiểm tra xem file có phần mở rộng .xlsb hay không
-        if filename.endswith(('.xlsx','.XLSX')):
+        if filename.endswith((".xlsx", ".XLSX")):
             # Tạo đường dẫn đầy đủ tới file .xlsb
             # xlsb_file = os.path.join(folder_path, filename)
             xlsb_file = filename
             listFile.append(xlsb_file)
     return listFile
 
+
 allFileXLSX = find_all_xlsx_in_folder(folder_path)
+
 
 # Verify if files are supported
 def is_excel_file(files):
-    supported_files = ['.xls', '.xlsx', '.xlsb', '.XLSB']
+    supported_files = [".xls", ".xlsx", ".xlsb", ".XLSB"]
 
     for file in files:
         file_type = os.path.splitext(file)[1]
         if file_type not in supported_files:
             return False
-    
+
     return True
+
 
 for excelFile in allFileXLSX:
     column_index = 2
@@ -55,10 +60,10 @@ for excelFile in allFileXLSX:
     jobName = ""
     print(f"Mã số KDCV: {excelFile[:-5]}")
     for name in sheetNames:
-        if name.startswith('K'):
+        if name.startswith("K"):
             # print(f"Sheet name: {name} -----------------/")
             sheet = workbook[name]
-            jobName = sheet['A1'].value
+            jobName = sheet["A1"].value
             # Lấy tất cả giá trị trong cột và vị trí của chúng
             non_nan_values = []
             # column_values = [cell.value for cell in sheet['H']]
@@ -84,11 +89,11 @@ for excelFile in allFileXLSX:
                 else:
                     merged_cells_filter[match].append(merged_cell.coord)
             # print(merged_cells_filter)
-            
+
             # Tìm tất cả các ô có giá trị khác none và vị trí hàng của chúng trong cột bất kỳ
             for row in range(5, sheet.max_row + 1):
                 cell_value = sheet.cell(row=row, column=column_index).value
-                if (cell_value is not None):
+                if cell_value is not None:
                     non_nan_values.append((cell_value, row))
 
             # Tìm vị trí hàng của từng hạng mục điểm kiểm
@@ -115,7 +120,7 @@ for excelFile in allFileXLSX:
                     #                     dvd2 = rawDvd2.replace("\n", "").replace(" ","")
                     #                     sub["isMeasure"] = isMeasure
                     #                     sub["unitOfMeasurement"] = [dvd1, dvd2]
-                                        
+
                     #                 else:
                     #                     sub["isMeasure"] = isMeasure
                     #                     sub["unitOfMeasurement"] = []
@@ -129,21 +134,21 @@ for excelFile in allFileXLSX:
                     # category[5]: Chủng loại
                     # category[6]: Phân khu: [{name: tên phân khu, is_measure: trị thực đo, unitOfMeasurement: đơn vị đo}]
                     # category[7]: Các thay đổi cần ghi chép lại: {deviceChange: thay đổi thiết bị, partCodeChange: thay đổi mã hàng, powerFailure: sự cố về nguồn điện}
-                    category = [0,0,0,0,0,0,0,0]
+                    category = [0, 0, 0, 0, 0, 0, 0, 0]
                     pattern_IVXLCDM = r"\([IVXLCDM ,.;:]+\)"
                     category[0] = value
                     category[1] = sheet.cell(row=row, column=3).value
                     # print(f"{category[0]}: {category[1]}")
                     if category[1] is not None:
-                        category[1] = category[1].replace("\n"," ")
+                        category[1] = category[1].replace("\n", " ")
                         match_IVXLCDM = re.search(pattern_IVXLCDM, category[1])
                     else:
                         continue
-                    
+
                     if match_IVXLCDM:
                         extracted_string = match_IVXLCDM.group()
-                        normalized_string = re.sub(r"[ ,.;:]+", ',', extracted_string.strip('()'))
-                        array_of_values = normalized_string.split(',')
+                        normalized_string = re.sub(r"[ ,.;:]+", ",", extracted_string.strip("()"))
+                        array_of_values = normalized_string.split(",")
 
                     # In kết quả
                     # print(f"Chuỗi đầu vào: '{category[1]}'")
@@ -151,7 +156,7 @@ for excelFile in allFileXLSX:
 
                     category[2] = sheet.cell(row=row, column=4).value
                     if category[2] is not None:
-                        category[2] = category[2].replace("\n"," ")
+                        category[2] = category[2].replace("\n", " ")
                     else:
                         continue
 
@@ -159,16 +164,20 @@ for excelFile in allFileXLSX:
 
                     category[4] = sheet.cell(row=row, column=6).value
                     if category[4] is not None:
-                        category[4] = category[4].replace("\n",", ")
+                        category[4] = category[4].replace("\n", ", ")
                     else:
                         continue
 
                     category[5] = sheet.cell(row=row, column=7).value
                     if category[5] is not None:
-                        category[5] = category[5].replace("\n",", ")
+                        category[5] = category[5].replace("\n", ", ")
 
                     # category[6] = subdivisions
-                    category[6] = {"deviceChange": False, "partCodeChange": False, "powerFailure": False}
+                    category[6] = {
+                        "deviceChange": False,
+                        "partCodeChange": False,
+                        "powerFailure": False,
+                    }
                     for i in array_of_values:
                         if i == "I":
                             category[6]["deviceChange"] = True
@@ -191,10 +200,10 @@ for excelFile in allFileXLSX:
     for category in analyst_categories:
         print(f"STT: {category[0]}")
         print(f"  Hạng mục điểm kiểm: {category[1]}")
-        print(f"  Phương pháp điểm kiểm: {category[2]}") 
-        print(f"  Vị trí điểm kiểm: {category[3]}") 
+        print(f"  Phương pháp điểm kiểm: {category[2]}")
+        print(f"  Vị trí điểm kiểm: {category[3]}")
         print(f"  PP xác nhận & bản TMKT: {category[4]}")
-        print(f"  Chủng loại: {category[5]}") 
+        print(f"  Chủng loại: {category[5]}")
         print(f"  Các thay đổi cần ghi chép lại: {category[6]}")
         # print(f"  Phân khu:")
         # for sub in category[6]:
@@ -204,24 +213,25 @@ for excelFile in allFileXLSX:
     # Đóng workbook
     workbook.close()
 
+
 def extract_and_normalize(input_string):
     # Biểu thức chính quy để tìm các phần có dạng (I), (II), (I;III), (I.III), v.v.
     pattern = r"\([IVXLCDM ,.;:]+\)"
-    
+
     # Tìm mẫu đầu tiên khớp với biểu thức chính quy
     match = re.search(pattern, input_string)
     if match:
         extracted_string = match.group()
         print(f"Phần trích xuất: {extracted_string}")
-        
+
         # Chuẩn hóa các ký tự ngăn cách thành dấu phẩy
-        normalized_string = re.sub(r"[ ,.;:]+", ',', extracted_string.strip('()'))
+        normalized_string = re.sub(r"[ ,.;:]+", ",", extracted_string.strip("()"))
         print(f"Chuỗi chuẩn hóa: {normalized_string}")
-        
+
         # Tách chuỗi thành mảng
-        array_of_values = normalized_string.split(',')
+        array_of_values = normalized_string.split(",")
         print(f"Mảng phân tích: {array_of_values}")
-        
+
         return array_of_values
     else:
         print("Không tìm thấy phần khớp nào.")
